@@ -21,6 +21,8 @@ class LanguagePack::Rack < LanguagePack::Ruby
   end
 
   def default_process_types
+    return super if env("HEROKU_SKIP_WEB_DYNO")
+
     # let's special case thin here if we detect it
     web_process = bundler.has_gem?("thin") ?
       "bundle exec thin start -R config.ru -e $RACK_ENV -p ${PORT:-5000}" :
